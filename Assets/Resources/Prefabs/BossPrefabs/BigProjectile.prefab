@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4118031502198422}
   - component: {fileID: 58478325468913510}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: BigProjectile
   m_TagString: EnemyProjectile
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ GameObject:
   - component: {fileID: 4688391331401376}
   - component: {fileID: 198623806675038916}
   - component: {fileID: 199231879399474932}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ GameObject:
   - component: {fileID: 4001171116070070}
   - component: {fileID: 198372413462071488}
   - component: {fileID: 199715723785764918}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: EdgeParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}

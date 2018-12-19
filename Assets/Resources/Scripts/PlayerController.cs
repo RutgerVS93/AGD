@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour {
     public bool canFire = true;
 
     private Rigidbody2D rb;
+    public float knockbackVertical, knockbackHorizontal;
 
     void Start ()
     {
@@ -203,6 +204,17 @@ public class PlayerController : MonoBehaviour {
         if (collision.gameObject.CompareTag("EnemyProjectile"))
         {
             healthScript.TakeDamage(1);
+            StartCoroutine(FlashOnHit(gameObject));
+
+            if (transform.position.x < collision.gameObject.transform.position.x)
+            {
+                rb.AddForce(new Vector2(knockbackHorizontal, knockbackVertical));
+            }
+            else if (transform.position.x > collision.gameObject.transform.position.x)
+            {
+                rb.AddForce(new Vector2(knockbackHorizontal, knockbackVertical));
+            }
+
             if (healthScript.currentHealth <= 0)
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -212,5 +224,15 @@ public class PlayerController : MonoBehaviour {
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+    }
+
+    IEnumerator FlashOnHit(GameObject obj)
+    {
+        SpriteRenderer rend = obj.GetComponent<SpriteRenderer>();
+        Color startColor = rend.color;
+
+        rend.color = Color.red;
+        yield return new WaitForSeconds(.05f);
+        rend.color = startColor;
     }
 }

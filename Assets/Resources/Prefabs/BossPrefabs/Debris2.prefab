@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4402337624082534}
   - component: {fileID: 198937551934887764}
   - component: {fileID: 199663869288583682}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: FireTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,9 +42,9 @@ GameObject:
   - component: {fileID: 50400413591546478}
   - component: {fileID: 114693080280667910}
   - component: {fileID: 212775446646793452}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Debris2
-  m_TagString: Untagged
+  m_TagString: EnemyProjectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 4684513238372210}
   - component: {fileID: 198881235676296558}
   - component: {fileID: 199780433496289552}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: SmokeTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4230837145856200}
   - component: {fileID: 108693818967564706}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 4129882289356154}
   - component: {fileID: 198120708040174434}
   - component: {fileID: 199320507194132440}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: ExtraGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
