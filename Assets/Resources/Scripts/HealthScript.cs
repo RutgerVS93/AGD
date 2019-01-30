@@ -87,6 +87,10 @@ public class HealthScript : MonoBehaviour {
             {
                 Destroy(gameObject);
             }
+            if (collision.gameObject.CompareTag("Killbox"))
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

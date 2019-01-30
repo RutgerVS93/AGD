@@ -7,6 +7,7 @@ public class BlockSpawner : MonoBehaviour {
     public GameObject block;
     private GameObject blockClone;
     public int[] numberofPositions;
+    public int distance;
 
     public float delay, cycleDelay;
     public bool canSpawn = true;
@@ -31,7 +32,7 @@ public class BlockSpawner : MonoBehaviour {
         {
             Vector3 newPos;
             newPos = transform.position;
-            newPos.x += i;
+            newPos.x += i * distance;
 
             blockClone = Instantiate(block, newPos, Quaternion.identity);
             yield return new WaitForSeconds(delay);
