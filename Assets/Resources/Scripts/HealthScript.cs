@@ -68,5 +68,25 @@ public class HealthScript : MonoBehaviour {
                 Destroy(collision.gameObject);
             }
         }
+
+        if (gameObject.tag == "Destructible")
+        {
+            if (currentHealth == 0)
+            {
+                Destroy(gameObject);
+            }
+            if (collision.gameObject.CompareTag("Killbox"))
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        if (gameObject.tag == "Enemy")
+        {
+            if (currentHealth == 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 }

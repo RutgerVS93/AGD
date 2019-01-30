@@ -10,6 +10,10 @@ TagManager:
   - EnemyProjectile
   - Bullet
   - Killbox
+  - Destructible
+  - LaunchOrb
+  - Enemy
+  - LaunchPad
   layers:
   - Default
   - TransparentFX

@@ -21,11 +21,22 @@ public class PlayerController : MonoBehaviour {
 
     public float jumpForce;
     public float gravMultiplier;
+    public float fallMultiplier;
+    public float lowJumpMultiplier;
 
     public bool canFire = true;
 
     private Rigidbody2D rb;
     public float knockbackVertical, knockbackHorizontal;
+
+    [Header ("Bash")]
+    public float reachRadius;
+    RaycastHit2D[] objectsNear;
+    public float launchSpeed;
+    GameObject launchPos;
+    public GameObject arrow;
+    bool canLaunch;
+    Vector3 direction;
 
     void Start ()
     {
@@ -40,30 +51,71 @@ public class PlayerController : MonoBehaviour {
 	void Update ()
     {
         Fire();
+        
 	}
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, reachRadius);
+    }
 
     private void FixedUpdate()
     {
         Movement();
+        Launch();
     }
 
     void Movement()
     {
         float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
         rb.velocity = new Vector2(h * maxSpeed, rb.velocity.y);
 
-        if (Input.GetKeyDown(KeyCode.W) && Grounded())
+        //ALTERNATE MOVEMENT
+        //if (h > 0)
+        //{
+        //    rb.AddForce(Vector2.right * speed * Time.deltaTime);
+        //}
+        //else if (h < 0)
+        //{
+        //    rb.AddForce(Vector2.left * speed * Time.deltaTime);
+        //}
+        //if (rb.velocity.x > maxSpeed)
+        //{
+        //    rb.velocity = new Vector2(maxSpeed, rb.velocity.y);
+        //}
+        //else if (rb.velocity.x < -maxSpeed)
+        //{
+        //    rb.velocity = new Vector2(-maxSpeed, rb.velocity.y);
+        //}
+        //if (h == 0)
+        //{
+        //    rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, Time.deltaTime);
+        //}
+
+        if (Input.GetKeyDown(KeyCode.W) && Grounded() || Input.GetButtonDown("A_Button") && Grounded() && v >= 0)
         {
             rb.AddForce(Vector2.up * jumpForce);
         }
 
-        if (currentVelocity.y < 0 )
+        //Smoother Jump
+        if (rb.velocity.y <= 0)
         {
-            rb.gravityScale *= gravMultiplier;
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-        else
+        else if (rb.velocity.y >= 0  && !Input.GetButton("A_Button"))
         {
-            rb.gravityScale = 1;
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+        }
+
+        if (rb.velocity.y <= -10)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, -10);
+        }
+        else if (rb.velocity.y >= 15)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 15);
         }
 
         if (h > 0 && !facingRight)
@@ -117,7 +169,7 @@ public class PlayerController : MonoBehaviour {
             currentGun = 2;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("X_Button"))
         {
             canFire = false;
             StartCoroutine(FireGun());
@@ -199,6 +251,19 @@ public class PlayerController : MonoBehaviour {
         yield return null;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        if (collision.gameObject.CompareTag("Ground") && rb.velocity.y < 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 0);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("EnemyProjectile"))
@@ -223,6 +288,58 @@ public class PlayerController : MonoBehaviour {
         if (collision.gameObject.CompareTag("Killbox"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
+    void Launch()
+    {
+        float y = Input.GetAxis("Vertical");
+        float x = Input.GetAxis("Horizontal");
+
+        if (Input.GetButton("Y_Button"))
+        {
+            objectsNear = Physics2D.CircleCastAll(transform.position, reachRadius, Vector3.forward);
+            foreach (RaycastHit2D obj in objectsNear)
+            {
+                if (obj.collider.gameObject.GetComponent<ScreenShake>() != null)
+                {
+                    launchPos = obj.collider.gameObject;
+                    canLaunch = true;
+
+                    arrow.SetActive(true);
+                    arrow.transform.position = launchPos.transform.position;
+                    float rot_z = Mathf.Atan2(-x, y) * Mathf.Rad2Deg;
+                    arrow.transform.rotation = Quaternion.Euler(0f, 0f, rot_z);
+
+                    direction = new Vector3(x, y, 0);
+                    //direction = new Vector3(x, y, 0) - launchPos.transform.position;
+                    direction.Normalize();
+                    Debug.Log(direction);
+
+                    Time.timeScale = 0.2f;
+                    Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                }
+            }
+        }
+        else if (Input.GetButtonUp("Y_Button") && canLaunch)
+        {
+            //rb.velocity = Vector2.zero;
+            Time.timeScale = 1;
+            Time.fixedDeltaTime = 0.02f;
+
+            canLaunch = false;
+            arrow.SetActive(false);
+
+            transform.position = launchPos.transform.position;
+            //rb.velocity = new Vector2(launchSpeed * x, launchSpeed * y);
+            //rb.AddForce(new Vector2(x * launchSpeed * 2, y * launchSpeed));
+
+            rb.velocity = direction * launchSpeed;
+        }
+        else if (Input.GetButtonUp("Y_Button") && !canLaunch)
+        {
+            Time.timeScale = 1;
+            Time.fixedDeltaTime = 0.02f;
         }
     }
 
