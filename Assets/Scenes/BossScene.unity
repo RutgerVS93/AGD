@@ -329,12 +329,12 @@ Prefab:
     - target: {fileID: 114304173024972084, guid: adc8bd316f4da5f469305e40572aff14,
         type: 2}
       propertyPath: knockbackVertical
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114304173024972084, guid: adc8bd316f4da5f469305e40572aff14,
         type: 2}
       propertyPath: knockbackHorizontal
-      value: 500
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: adc8bd316f4da5f469305e40572aff14, type: 2}

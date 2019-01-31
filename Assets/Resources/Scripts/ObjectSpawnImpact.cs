@@ -7,7 +7,7 @@ public class ObjectSpawnImpact : MonoBehaviour {
     public GameObject impactParticle;
     public string ignoreTag1, ignoreTag2;
 
-    private ParticleRenderer pRend;
+    //private ParticleRenderer pRend;
 
     private void Start()
     {

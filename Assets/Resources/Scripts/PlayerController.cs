@@ -285,7 +285,7 @@ public class PlayerController : MonoBehaviour {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
-        if (collision.gameObject.CompareTag("Killbox"))
+        if (collision.gameObject.CompareTag("Killbox") || collision.gameObject.CompareTag("EnemyBullet"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
