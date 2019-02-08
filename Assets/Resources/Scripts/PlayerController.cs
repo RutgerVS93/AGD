@@ -5,9 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
-    
-
-    public HealthScript healthScript;
+    public GameManager gameManager;
 
     public Gun[] guns;
     public int currentGun;
@@ -29,18 +27,11 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody2D rb;
     public float knockbackVertical, knockbackHorizontal;
 
-    [Header ("Bash")]
-    public float reachRadius;
-    RaycastHit2D[] objectsNear;
-    public float launchSpeed;
-    GameObject launchPos;
-    public GameObject arrow;
-    bool canLaunch;
-    Vector3 direction;
+    public Vector3 checkpointPos;
 
     void Start ()
     {
-        healthScript = GetComponent<HealthScript>();
+        gameManager = GetComponent<GameManager>();
 
         currentGun = 0;
 
@@ -50,20 +41,12 @@ public class PlayerController : MonoBehaviour {
 	
 	void Update ()
     {
-        Fire();
-        
+        Fire();        
 	}
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, reachRadius);
-    }
 
     private void FixedUpdate()
     {
         Movement();
-        Launch();
     }
 
     void Movement()
@@ -255,7 +238,8 @@ public class PlayerController : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            transform.position = checkpointPos;
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         if (collision.gameObject.CompareTag("Ground") && rb.velocity.y < 0)
@@ -266,90 +250,26 @@ public class PlayerController : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("EnemyProjectile"))
-        {
-            healthScript.TakeDamage(1);
-            StartCoroutine(FlashOnHit(gameObject));
-
-            if (transform.position.x < collision.gameObject.transform.position.x)
-            {
-                rb.AddForce(new Vector2(knockbackHorizontal, knockbackVertical));
-            }
-            else if (transform.position.x > collision.gameObject.transform.position.x)
-            {
-                rb.AddForce(new Vector2(knockbackHorizontal, knockbackVertical));
-            }
-
-            if (healthScript.currentHealth <= 0)
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
-        }
         if (collision.gameObject.CompareTag("Killbox") || collision.gameObject.CompareTag("EnemyBullet"))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            transform.position = checkpointPos;
         }
-    }
 
-    void Launch()
-    {
-        float y = Input.GetAxis("Vertical");
-        float x = Input.GetAxis("Horizontal");
-
-        if (Input.GetButton("Y_Button"))
+        if (collision.gameObject.CompareTag("CheckPoint"))
         {
-            objectsNear = Physics2D.CircleCastAll(transform.position, reachRadius, Vector3.forward);
-            foreach (RaycastHit2D obj in objectsNear)
-            {
-                if (obj.collider.gameObject.GetComponent<ScreenShake>() != null)
-                {
-                    launchPos = obj.collider.gameObject;
-                    canLaunch = true;
-
-                    arrow.SetActive(true);
-                    arrow.transform.position = launchPos.transform.position;
-                    float rot_z = Mathf.Atan2(-x, y) * Mathf.Rad2Deg;
-                    arrow.transform.rotation = Quaternion.Euler(0f, 0f, rot_z);
-
-                    direction = new Vector3(x, y, 0);
-                    //direction = new Vector3(x, y, 0) - launchPos.transform.position;
-                    direction.Normalize();
-                    Debug.Log(direction);
-
-                    Time.timeScale = 0.2f;
-                    Time.fixedDeltaTime = 0.02f * Time.timeScale;
-                }
-            }
+            //Set checkpoint pos to new checkpoint pos
+            checkpointPos = collision.gameObject.transform.position;
         }
-        else if (Input.GetButtonUp("Y_Button") && canLaunch)
+
+        if (collision.gameObject.CompareTag("LevelEnd"))
         {
-            //rb.velocity = Vector2.zero;
-            Time.timeScale = 1;
-            Time.fixedDeltaTime = 0.02f;
+            //Increment level + set player to level start pos
+            gameManager.currentLevel += 1;
+            transform.position = gameManager.startPositions[gameManager.currentLevel].position;
 
-            canLaunch = false;
-            arrow.SetActive(false);
-
-            transform.position = launchPos.transform.position;
-            //rb.velocity = new Vector2(launchSpeed * x, launchSpeed * y);
-            //rb.AddForce(new Vector2(x * launchSpeed * 2, y * launchSpeed));
-
-            rb.velocity = direction * launchSpeed;
+            //Reset checkpoint when advancing level to level start pos
+            checkpointPos = gameManager.startPositions[gameManager.currentLevel].position;
         }
-        else if (Input.GetButtonUp("Y_Button") && !canLaunch)
-        {
-            Time.timeScale = 1;
-            Time.fixedDeltaTime = 0.02f;
-        }
-    }
-
-    IEnumerator FlashOnHit(GameObject obj)
-    {
-        SpriteRenderer rend = obj.GetComponent<SpriteRenderer>();
-        Color startColor = rend.color;
-
-        rend.color = Color.red;
-        yield return new WaitForSeconds(.05f);
-        rend.color = startColor;
-    }
+    }    
 }

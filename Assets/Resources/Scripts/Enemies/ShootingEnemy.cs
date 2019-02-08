@@ -45,13 +45,16 @@ public class ShootingEnemy : MonoBehaviour {
 
     void CheckPlayerPos()
     {
-        if (player.transform.position.x < gameObject.transform.position.x && !facingRight)
+        if (player != null)
         {
-            Flip();
-        }
-        else if (player.transform.position.x > gameObject.transform.position.x && facingRight)
-        {
-            Flip();
+            if (player.transform.position.x < gameObject.transform.position.x && !facingRight)
+            {
+                Flip();
+            }
+            else if (player.transform.position.x > gameObject.transform.position.x && facingRight)
+            {
+                Flip();
+            }
         }
     }
 
