@@ -41,7 +41,8 @@ public class PlayerController : MonoBehaviour {
 	
 	void Update ()
     {
-        Fire();        
+        Fire();
+        Dash();
 	}
 
     private void FixedUpdate()
@@ -51,10 +52,12 @@ public class PlayerController : MonoBehaviour {
 
     void Movement()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        rb.velocity = new Vector2(h * maxSpeed, rb.velocity.y);
+        float h; 
+        float v;
+        h = Input.GetAxis("Horizontal");
+        v = Input.GetAxis("Vertical");
 
+        rb.velocity = new Vector2(h * maxSpeed, rb.velocity.y);
         //ALTERNATE MOVEMENT
         //if (h > 0)
         //{
@@ -108,6 +111,58 @@ public class PlayerController : MonoBehaviour {
         else if (h < 0 && facingRight)
         {
             Flip();
+        }
+    }
+
+    void Dash()
+    {
+        Vector2 currentVelocity;
+        float h;
+        float v;
+        
+        h = Mathf.RoundToInt(Input.GetAxis("Horizontal"));
+        v = Mathf.RoundToInt(Input.GetAxis("Vertical"));
+
+        Vector2 poep = new Vector2(h, v);
+        Debug.Log(poep);
+        //Left
+        if (h == -1 && v == 0)
+        {
+            
+        }
+        //Top Left
+        if (h == -1 && v == 1)
+        {
+           
+        }
+        //Top
+        if (h == 0 && v == 1)
+        {
+
+        }
+        //Top Right
+        if (h == 1 && v == 1)
+        {
+
+        }
+        //Right
+        if (h == 1 && v == 0)
+        {
+        }
+        //Bottom Right
+        if (h == 1 && v == -1)
+        {
+
+        }
+        //Bottom
+        if (h == 0 && v == -1)
+        {
+
+        }
+        //Bottom Left
+        if (h == -1 && v == -1)
+        {
+
         }
     }
 
