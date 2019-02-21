@@ -134,7 +134,7 @@ MonoBehaviour:
   canFire: 1
   canDash: 0
   isDashing: 0
-  dashForce: 30
+  dashForce: 10
   dashTime: 0.1
   checkpointPos: {x: 0, y: 0, z: 0}
 --- !u!70 &572617134487853305

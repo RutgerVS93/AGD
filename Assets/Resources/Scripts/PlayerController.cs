@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour {
 
     [Space]
     public bool canFire = true;
-    public bool canDash;
+    public bool canDash = false;
     public bool isDashing;
     public float dashForce;
     public float dashTime;
@@ -93,8 +93,10 @@ public class PlayerController : MonoBehaviour {
             rb.AddForce(Vector2.up * jumpForce);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        //ADJUST TO CONTROLLER INPUT
+        if (Input.GetKeyDown(KeyCode.Space) && canDash && !isDashing)
         {
+            canDash = false;
             StartCoroutine(Dash());
         }
 
@@ -191,6 +193,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (Physics2D.Raycast(transform.position, Vector2.down, .5f))
         {
+            canDash = true;
             return true;
         }
         else
