@@ -12,21 +12,26 @@ public class PlayerController : MonoBehaviour {
 
     public Transform firePoint;
 
+    [Space]
     public float speed;
     public float maxSpeed;
     public Vector2 currentVelocity;
     bool facingRight = true;
 
+    [Space]
     public float jumpForce;
     public float gravMultiplier;
     public float fallMultiplier;
     public float lowJumpMultiplier;
 
+    [Space]
     public bool canFire = true;
+    public bool canDash;
+    public bool isDashing;
+    public float dashForce;
+    public float dashTime;
 
     private Rigidbody2D rb;
-    public float knockbackVertical, knockbackHorizontal;
-
     public Vector3 checkpointPos;
 
     void Start ()
@@ -38,16 +43,19 @@ public class PlayerController : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         firePoint = GetComponent<Transform>();
 	}
-	
-	void Update ()
-    {
-        Fire();
-        Dash();
-	}
 
     private void FixedUpdate()
     {
-        Movement();
+
+        if (!isDashing)
+        {
+            Movement();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Dash();
+        }
     }
 
     void Movement()
@@ -85,12 +93,17 @@ public class PlayerController : MonoBehaviour {
             rb.AddForce(Vector2.up * jumpForce);
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartCoroutine(Dash());
+        }
+
         //Smoother Jump
         if (rb.velocity.y <= 0)
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-        else if (rb.velocity.y >= 0  && !Input.GetButton("A_Button"))
+        else if (rb.velocity.y >= 0 && !Input.GetButton("A_Button"))
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
@@ -114,56 +127,63 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void Dash()
+    IEnumerator Dash()
     {
-        Vector2 currentVelocity;
+        isDashing = true;
+        rb.gravityScale = 0;
+        Vector2 currentVelocity = rb.velocity;
         float h;
         float v;
         
         h = Mathf.RoundToInt(Input.GetAxis("Horizontal"));
         v = Mathf.RoundToInt(Input.GetAxis("Vertical"));
 
-        Vector2 poep = new Vector2(h, v);
-        Debug.Log(poep);
+        //Set grav to 0 temporarily
+
         //Left
         if (h == -1 && v == 0)
         {
-            
+            rb.velocity = new Vector2((h * dashForce) + rb.velocity.x, (v * dashForce) + rb.velocity.y);
         }
         //Top Left
         if (h == -1 && v == 1)
         {
-           
+            rb.velocity = new Vector2((h * dashForce) + rb.velocity.x, (v * dashForce) + rb.velocity.y);
         }
         //Top
         if (h == 0 && v == 1)
         {
-
+            rb.velocity = new Vector2((h * dashForce) + rb.velocity.x, (v * dashForce) + rb.velocity.y);
         }
         //Top Right
         if (h == 1 && v == 1)
         {
-
+            rb.velocity = new Vector2((h * dashForce) + rb.velocity.x, (v * dashForce) + rb.velocity.y);
         }
         //Right
         if (h == 1 && v == 0)
         {
+            rb.velocity = new Vector2((h * dashForce) + rb.velocity.x, (v * dashForce) + rb.velocity.y);
         }
         //Bottom Right
         if (h == 1 && v == -1)
         {
-
+            rb.velocity = new Vector2((h * dashForce) + rb.velocity.x, (v * dashForce) + rb.velocity.y);
         }
         //Bottom
         if (h == 0 && v == -1)
         {
-
+            rb.velocity = new Vector2((h * dashForce) + rb.velocity.x, (v * dashForce) + rb.velocity.y);
         }
         //Bottom Left
         if (h == -1 && v == -1)
         {
-
+            rb.velocity = new Vector2((h * dashForce) + rb.velocity.x, (v * dashForce) + rb.velocity.y);
         }
+
+        yield return new WaitForSeconds(dashTime);
+        rb.gravityScale = 1;
+        isDashing = false;
     }
 
     //Ground Check
