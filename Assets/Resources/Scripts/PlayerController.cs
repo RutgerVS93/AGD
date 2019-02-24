@@ -94,11 +94,11 @@ public class PlayerController : MonoBehaviour {
         }
 
         //ADJUST TO CONTROLLER INPUT
-        if (Input.GetKeyDown(KeyCode.Space) && canDash && !isDashing)
-        {
-            canDash = false;
-            StartCoroutine(Dash());
-        }
+        //if (Input.GetKeyDown(KeyCode.Space) && canDash && !isDashing)
+        //{
+        //    canDash = false;
+        //    StartCoroutine(Dash());
+        //}
 
         //Smoother Jump
         if (rb.velocity.y <= 0)
