@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour {
     public float maxSpeed;
     public Vector2 currentVelocity;
     bool facingRight = true;
+    public float slowFactor;
 
     [Space]
     public float jumpForce;
@@ -46,16 +47,17 @@ public class PlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
+        Movement();
 
-        if (!isDashing)
-        {
-            Movement();
-        }
+        //if (!isDashing)
+        //{
+        //    Movement();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Dash();
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Dash();
+        //}
     }
 
     void Movement()
@@ -65,7 +67,15 @@ public class PlayerController : MonoBehaviour {
         h = Input.GetAxis("Horizontal");
         v = Input.GetAxis("Vertical");
 
-        rb.velocity = new Vector2(h * maxSpeed, rb.velocity.y);
+        if (h != 0)
+        {
+            rb.velocity = new Vector2(h * maxSpeed, rb.velocity.y);
+        }
+        else
+        {
+            rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, Time.deltaTime);
+        }
+
         //ALTERNATE MOVEMENT
         //if (h > 0)
         //{
@@ -85,10 +95,10 @@ public class PlayerController : MonoBehaviour {
         //}
         //if (h == 0)
         //{
-        //    rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, Time.deltaTime);
+        //    rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, Time.deltaTime * slowFactor);
         //}
 
-        if (Input.GetKeyDown(KeyCode.W) && Grounded() || Input.GetButtonDown("A_Button") && Grounded() && v >= 0)
+        if (Input.GetKeyDown(KeyCode.W) && Grounded() && v >= 0 || Input.GetButtonDown("A_Button") && Grounded() && v >= 0)
         {
             rb.AddForce(Vector2.up * jumpForce);
         }
@@ -105,7 +115,7 @@ public class PlayerController : MonoBehaviour {
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-        else if (rb.velocity.y >= 0 && !Input.GetButton("A_Button"))
+        else if (rb.velocity.y >= 0 && !Input.GetButton("A_Button") || rb.velocity.y >= 0 && !Input.GetKey(KeyCode.W))
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
@@ -129,6 +139,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    #region Dash
     IEnumerator Dash()
     {
         isDashing = true;
@@ -187,6 +198,7 @@ public class PlayerController : MonoBehaviour {
         rb.gravityScale = 1;
         isDashing = false;
     }
+    #endregion
 
     //Ground Check
     bool Grounded()
@@ -237,6 +249,7 @@ public class PlayerController : MonoBehaviour {
         }  
     }
 
+    #region gun Stuff
     IEnumerator FireGun()
     {
         GameObject bulletClone;
@@ -312,6 +325,8 @@ public class PlayerController : MonoBehaviour {
         yield return null;
     }
 
+    #endregion
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
@@ -323,6 +338,15 @@ public class PlayerController : MonoBehaviour {
         if (collision.gameObject.CompareTag("Ground") && rb.velocity.y < 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0);
+            //TO DO:
+            //Reset maxSpeed to regular maxSpeed
+        }
+
+        if (collision.gameObject.CompareTag("Ice"))
+        {
+            //TO DO:
+            //Set Ice tile tags
+            //Increase MaxSpeed
         }
     }
 
@@ -348,6 +372,11 @@ public class PlayerController : MonoBehaviour {
 
             //Reset checkpoint when advancing level to level start pos
             checkpointPos = gameManager.startPositions[gameManager.currentLevel].position;
+        }
+
+        if (collision.gameObject.CompareTag("Launch"))
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 15);
         }
     }    
 }

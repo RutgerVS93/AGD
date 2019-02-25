@@ -127,6 +127,7 @@ MonoBehaviour:
   speed: 500
   maxSpeed: 5
   currentVelocity: {x: 0, y: 0}
+  slowFactor: 5
   jumpForce: 450
   gravMultiplier: 2.5
   fallMultiplier: 2.5

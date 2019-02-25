@@ -11,12 +11,11 @@ TagManager:
   - Bullet
   - Killbox
   - Destructible
-  - LaunchOrb
   - Enemy
-  - LaunchPad
   - EnemyBullet
   - CheckPoint
   - LevelEnd
+  - Launch
   layers:
   - Default
   - TransparentFX
