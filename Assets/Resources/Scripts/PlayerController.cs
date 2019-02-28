@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour {
         //    rb.velocity = Vector2.Lerp(rb.velocity, Vector2.zero, Time.deltaTime * slowFactor);
         //}
 
-        if (Input.GetKeyDown(KeyCode.W) && Grounded() && v >= 0 || Input.GetButtonDown("A_Button") && Grounded() && v >= 0)
+        if (Input.GetKeyDown(KeyCode.W) && Grounded()|| Input.GetButtonDown("A_Button") && Grounded() && v >= 0)
         {
             rb.AddForce(Vector2.up * jumpForce);
         }
