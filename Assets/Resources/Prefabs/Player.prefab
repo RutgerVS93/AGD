@@ -116,8 +116,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 437d2cea5781cf548b1eeb1eb32873f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 8186918719742166778, guid: 4daa53b59341c51459416b8f6c435fc9,
-    type: 3}
+  gameManager: {fileID: 0}
+  managerScript: {fileID: 0}
   guns:
   - {fileID: 11400000, guid: 59b880e49544fdd4a80b475fd40822a2, type: 2}
   - {fileID: 11400000, guid: 4873e71142b258e45a6a800363d0c020, type: 2}
@@ -125,7 +125,7 @@ MonoBehaviour:
   currentGun: 0
   firePoint: {fileID: 572617134515881826}
   speed: 500
-  maxSpeed: 5
+  maxSpeed: 7
   currentVelocity: {x: 0, y: 0}
   slowFactor: 5
   jumpForce: 450

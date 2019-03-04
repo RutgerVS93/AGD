@@ -59,4 +59,14 @@ public class PlatformMutators : MonoBehaviour
             transform.position = startPos.position;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        collision.gameObject.transform.SetParent(gameObject.transform);
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        collision.gameObject.transform.SetParent(null);
+    }
 }

@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject player, activePlayer;
 
-    [SerializeField]
+    public GameObject[] levels;
+
     public Transform[] startPositions;
 
     [SerializeField]
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour
         }
 
         SpawnPlayerAtLevelStart();
+        ActivateLevel();
     }
 
     public void SpawnPlayerAtCheckPoint()
@@ -46,5 +48,27 @@ public class GameManager : MonoBehaviour
     {
         activePlayer = Instantiate(player);
         activePlayer.transform.position = startPositions[currentLevel].transform.position;
+    }
+
+    public void ActivateLevel()
+    {
+        switch (currentLevel)
+        {
+            case 0:
+                levels[0].SetActive(true);
+                levels[1].SetActive(false);
+                levels[2].SetActive(false);
+                break;
+            case 1:
+                levels[0].SetActive(false);
+                levels[1].SetActive(true);
+                levels[2].SetActive(false);
+                break;
+            case 2:
+                levels[0].SetActive(false);
+                levels[1].SetActive(false);
+                levels[2].SetActive(true);
+                break;
+        }
     }
 }

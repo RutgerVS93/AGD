@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
-    public GameManager gameManager;
+    public GameObject gameManager;
+    public GameManager managerScript;
 
     public Gun[] guns;
     public int currentGun;
@@ -37,17 +38,24 @@ public class PlayerController : MonoBehaviour {
 
     void Start ()
     {
-        gameManager = GetComponent<GameManager>();
-
         currentGun = 0;
 
         rb = GetComponent<Rigidbody2D>();
         firePoint = GetComponent<Transform>();
+
+        //checkpointPos = gameManager.startPositions[gameManager.currentLevel].transform.position;
 	}
 
     private void FixedUpdate()
     {
         Movement();
+
+        if (gameManager == null)
+        {
+            gameManager = GameObject.Find("GameManager");
+            managerScript = gameManager.GetComponent<GameManager>();
+            checkpointPos = managerScript.startPositions[managerScript.currentLevel].transform.position;
+        }
 
         //if (!isDashing)
         //{
@@ -347,6 +355,7 @@ public class PlayerController : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Killbox") || collision.gameObject.CompareTag("EnemyBullet"))
         {
+            
             //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             transform.position = checkpointPos;
         }
@@ -360,11 +369,12 @@ public class PlayerController : MonoBehaviour {
         if (collision.gameObject.CompareTag("LevelEnd"))
         {
             //Increment level + set player to level start pos
-            gameManager.currentLevel += 1;
-            transform.position = gameManager.startPositions[gameManager.currentLevel].position;
+            managerScript.currentLevel += 1;
+            transform.position = managerScript.startPositions[managerScript.currentLevel].position;
 
             //Reset checkpoint when advancing level to level start pos
-            checkpointPos = gameManager.startPositions[gameManager.currentLevel].position;
+            checkpointPos = managerScript.startPositions[managerScript.currentLevel].position;
+            managerScript.ActivateLevel();
         }
 
         if (collision.gameObject.CompareTag("Launch"))

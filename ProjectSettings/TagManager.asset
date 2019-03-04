@@ -16,6 +16,8 @@ TagManager:
   - CheckPoint
   - LevelEnd
   - Launch
+  - LaunchPad
+  - GameManager
   layers:
   - Default
   - TransparentFX
