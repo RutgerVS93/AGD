@@ -341,13 +341,6 @@ public class PlayerController : MonoBehaviour {
             //TO DO:
             //Reset maxSpeed to regular maxSpeed
         }
-
-        if (collision.gameObject.CompareTag("Ice"))
-        {
-            //TO DO:
-            //Set Ice tile tags
-            //Increase MaxSpeed
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -376,6 +369,7 @@ public class PlayerController : MonoBehaviour {
 
         if (collision.gameObject.CompareTag("Launch"))
         {
+            rb.velocity = Vector2.zero;
             rb.velocity = new Vector2(rb.velocity.x, 15);
         }
     }    

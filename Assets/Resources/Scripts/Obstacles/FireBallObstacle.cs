@@ -13,7 +13,6 @@ public class FireBallObstacle : MonoBehaviour {
 
 	void Start ()
     {
-        //rb = GetComponent<Rigidbody2D>();
 	}
 	
 	void Update ()
@@ -23,7 +22,6 @@ public class FireBallObstacle : MonoBehaviour {
             rb.velocity = Vector2.zero;
             Launch();
         }
-        //Launch();
 	}
 
     void Launch()

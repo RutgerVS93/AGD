@@ -17,10 +17,20 @@ public class PlatformMutators : MonoBehaviour
     private bool isActive;
     [SerializeField]
     private int delay;
+    public float decreaseAmount;
+
+    [Header("Falling Platform")]
+    public bool fallingPlatform;
+    public Transform startPos;
+    public Transform endPos;
+    public float fallSpeed;
 
     private void Start()
     {
-        InvokeRepeating("DisappearingPlatform", 1f, delay);
+        if (disappearingPlatform)
+        {
+            InvokeRepeating("DisappearingPlatform", 1f, delay);
+        }
     }
 
     void Update()
@@ -29,6 +39,11 @@ public class PlatformMutators : MonoBehaviour
         {
             RotatePlatform();
         }
+
+        if (fallingPlatform)
+        {
+            FallingPlatform();
+        }
     }
 
     void RotatePlatform()
@@ -36,11 +51,12 @@ public class PlatformMutators : MonoBehaviour
         transform.Rotate(Vector3.forward * rotSpeed);
     }
 
-
-    //Add Fade in / Fade out effect
-    void DisappearingPlatform()
+    void FallingPlatform()
     {
-        isActive = !isActive;
-        transform.gameObject.SetActive(isActive);
+        transform.Translate(Vector2.down * fallSpeed * Time.deltaTime);
+        if (transform.position.y <= endPos.position.y)
+        {
+            transform.position = startPos.position;
+        }
     }
 }
