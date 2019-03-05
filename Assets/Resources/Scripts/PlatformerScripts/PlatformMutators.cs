@@ -54,7 +54,11 @@ public class PlatformMutators : MonoBehaviour
     void FallingPlatform()
     {
         transform.Translate(Vector2.down * fallSpeed * Time.deltaTime);
-        if (transform.position.y <= endPos.position.y)
+        if (transform.position.y <= endPos.position.y && fallSpeed >= 0)
+        {
+            transform.position = startPos.position;
+        }
+        else if (transform.position.y >= endPos.position.y && fallSpeed < 0)
         {
             transform.position = startPos.position;
         }
